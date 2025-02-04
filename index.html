@@ -3,31 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
+    <title>Processing Redirect...</title>
     <script>
-        function getQueryParams() {
-            let params = new URLSearchParams(window.location.search);
-            let responseID = params.get("ResponseID");
-            let status = params.get("status");
-            let clientLink = params.get("client_link");
-
-            console.log("Received:", { responseID, status, clientLink });
+        function getURLParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let responseID = urlParams.get("ResponseID");
+            let status = urlParams.get("status");
+            let clientLink = urlParams.get("client_link");
 
             if (!responseID || !status) {
-                document.body.innerHTML = "<h2>Error: Missing parameters.</h2>";
+                document.body.innerHTML = "<h2>Error: Missing parameters</h2>";
                 return;
             }
 
-            if (status.toLowerCase() === "completed" && clientLink) {
-                console.log("Redirecting to client link:", decodeURIComponent(clientLink));
-                window.location.href = decodeURIComponent(clientLink);
-            } else {
-                document.body.innerHTML = `<h2>Survey Status: ${status}</h2>`;
+            // Decode client link to ensure proper URL handling
+            if (clientLink) {
+                clientLink = decodeURIComponent(clientLink);
             }
+
+            // Format correctly for Apps Script
+            let formattedURL = "https://script.google.com/macros/s/AKfycbw4ZQUBE5dc1FeRypNkh5H3Pk_Pynno2msforf2AwFM0OEYpADz01BMAF62WW0qa1-c/exec?"
+                + "ResponseID=" + encodeURIComponent(responseID)
+                + "&status=" + encodeURIComponent(status)
+                + (clientLink ? "&client_link=" + encodeURIComponent(clientLink) : "");
+
+            // Redirect to Apps Script
+            window.location.href = formattedURL;
         }
+
+        window.onload = getURLParams;
     </script>
 </head>
-<body onload="getQueryParams()">
-    <h2>Processing your request...</h2>
+<body>
+    <h2>Processing Redirect...</h2>
 </body>
 </html>
+
