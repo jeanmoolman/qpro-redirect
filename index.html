@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <script>
+        function extractParams() {
+            let url = window.location.href;
+            let parts = url.split("/exec/");
+            if (parts.length > 1) {
+                let params = parts[1].split("&");
+                let responseID = params[0];
+                let status = params.find(p => p.includes("custom1="))?.split("=")[1] || "unknown";
+
+                // Redirect to Apps Script with the correct format
+                let newURL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_URL/exec?"
+                            + "ResponseID=" + responseID
+                            + "&status=" + status;
+
+                window.location.href = newURL;
+            } else {
+                document.body.innerHTML = "<h2>Error: Invalid URL Format</h2>";
+            }
+        }
+        window.onload = extractParams;
+    </script>
+</head>
+<body>
+    <h2>Redirecting...</h2>
+</body>
+</html>
