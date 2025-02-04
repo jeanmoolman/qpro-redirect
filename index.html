@@ -5,24 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting...</title>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Extract URL parameters from the QuestionPro redirect
-            const urlParams = new URLSearchParams(window.location.search);
-            const responseID = urlParams.get("ResponseID"); // Extract ResponseID
-            const status = urlParams.get("status"); // Extract Completion Status
+        function getQueryParams() {
+            let params = new URLSearchParams(window.location.search);
+            let responseID = params.get("ResponseID");
+            let status = params.get("status");
+            let clientLink = params.get("client_link");
 
-            if (responseID && status) {
-                // Redirect to Google Apps Script with the correct parameters
-                const redirectUrl = `https://script.google.com/macros/s/AKfycbw4ZQUBE5dc1FeRypNkh5H3Pk_Pynno2msforf2AwFM0OEYpADz01BMAF62WW0qa1-c/exec?ResponseID=${responseID}&status=${status}`;
-                window.location.href = redirectUrl;
-            } else {
-                // Show an error message if parameters are missing
-                document.body.innerHTML = "<h2>Error: Missing parameters. Please check your URL.</h2>";
+            console.log("Received:", { responseID, status, clientLink });
+
+            if (!responseID || !status) {
+                document.body.innerHTML = "<h2>Error: Missing parameters.</h2>";
+                return;
             }
-        });
+
+            if (status.toLowerCase() === "completed" && clientLink) {
+                console.log("Redirecting to client link:", decodeURIComponent(clientLink));
+                window.location.href = decodeURIComponent(clientLink);
+            } else {
+                document.body.innerHTML = `<h2>Survey Status: ${status}</h2>`;
+            }
+        }
     </script>
 </head>
-<body>
-    <p>Redirecting...</p>
+<body onload="getQueryParams()">
+    <h2>Processing your request...</h2>
 </body>
 </html>
