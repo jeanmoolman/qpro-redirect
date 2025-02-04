@@ -6,36 +6,46 @@
     <title>Processing Redirect...</title>
     <script>
         function getURLParams() {
-            const urlParams = new URLSearchParams(window.location.search);
-            let responseID = urlParams.get("ResponseID");
-            let status = urlParams.get("status");
-            let clientLink = urlParams.get("client_link");
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                let responseID = urlParams.get("ResponseID");
+                let status = urlParams.get("status");
+                let clientLink = urlParams.get("client_link");
 
-            if (!responseID || !status) {
-                document.body.innerHTML = "<h2>Error: Missing parameters</h2>";
-                return;
+                console.log("Debug: ResponseID:", responseID);
+                console.log("Debug: Status:", status);
+                console.log("Debug: Client Link:", clientLink);
+
+                if (!responseID || !status) {
+                    document.body.innerHTML = "<h2>❌ Error: Missing parameters.</h2><p>Check your URL format.</p>";
+                    return;
+                }
+
+                // Ensure client link is URL encoded
+                let encodedClientLink = clientLink ? encodeURIComponent(clientLink) : "";
+
+                // Construct the Apps Script Redirect URL
+                let formattedURL = "https://script.google.com/macros/s/AKfycbw4ZQUBE5dc1FeRypNkh5H3Pk_Pynno2msforf2AwFM0OEYpADz01BMAF62WW0qa1-c/exec?"
+                    + "ResponseID=" + encodeURIComponent(responseID)
+                    + "&status=" + encodeURIComponent(status)
+                    + (encodedClientLink ? "&client_link=" + encodedClientLink : "");
+
+                console.log("Redirecting to:", formattedURL);
+
+                // Redirect to Apps Script
+                window.location.href = formattedURL;
+
+            } catch (error) {
+                console.error("⚠️ Error Parsing URL Parameters:", error);
+                document.body.innerHTML = "<h2>⚠️ Error Parsing URL Parameters.</h2><p>Check console for details.</p>";
             }
-
-            // Decode client link to ensure proper URL handling
-            if (clientLink) {
-                clientLink = decodeURIComponent(clientLink);
-            }
-
-            // Format correctly for Apps Script
-            let formattedURL = "https://script.google.com/macros/s/AKfycbw4ZQUBE5dc1FeRypNkh5H3Pk_Pynno2msforf2AwFM0OEYpADz01BMAF62WW0qa1-c/exec?"
-                + "ResponseID=" + encodeURIComponent(responseID)
-                + "&status=" + encodeURIComponent(status)
-                + (clientLink ? "&client_link=" + encodeURIComponent(clientLink) : "");
-
-            // Redirect to Apps Script
-            window.location.href = formattedURL;
         }
 
         window.onload = getURLParams;
     </script>
 </head>
 <body>
-    <h2>Processing Redirect...</h2>
+    <h2>Processing your request...</h2>
 </body>
 </html>
 
