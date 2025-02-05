@@ -1,44 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Processing Redirect...</title>
-    <script>
-        function getURLParams() {
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                let responseID = urlParams.get("ResponseID");
-                let status = urlParams.get("status");
-
-                console.log("Debug: ResponseID =", responseID);
-                console.log("Debug: Status =", status);
-
-                if (!responseID || !status) {
-                    document.body.innerHTML = "<h2>❌ Error: Missing parameters.</h2><p>Check your URL format.</p>";
-                    return;
-                }
-
-                // Construct the correctly formatted Apps Script URL
-                let formattedURL = "https://script.google.com/macros/s/AKfycbzh6cq5QuZ2R420pb0aJbq_pYS6loxtkdSG1RyoF2rNNrOqzWnnn2OrvXKvEsyw5Wd5lA/exec"
-                    + "?ResponseID=" + encodeURIComponent(responseID)
-                    + "&status=" + encodeURIComponent(status);
-
-                console.log("Redirecting to:", formattedURL);
-
-                // Redirect to Apps Script
-                window.location.href = formattedURL;
-
-            } catch (error) {
-                console.error("⚠️ Error Parsing URL Parameters:", error);
-                document.body.innerHTML = "<h2>⚠️ Error Parsing URL Parameters.</h2><p>Check console for details.</p>";
-            }
-        }
-
-        window.onload = getURLParams;
-    </script>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    // When the page loads, run the redirection.
+    window.onload = function() {
+      // Get the current page's query string (e.g., ?ResponseID=TEST141&status=Completed)
+      var queryString = window.location.search;
+      // Build the full Apps Script URL by appending the query string
+      var appsScriptUrl = "https://script.google.com/macros/s/AKfycbzh6cq5QuZ2R420pb0aJbq_pYS6loxtkdSG1RyoF2rNNrOqzWnnn2OrvXKvEsyw5Wd5lA/exec" + queryString;
+      // Redirect the browser to the Apps Script URL
+      window.location.href = appsScriptUrl;
+    };
+  </script>
 </head>
 <body>
-    <h2>Processing your request...</h2>
+  <p>Redirecting, please wait...</p>
 </body>
 </html>
